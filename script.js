@@ -90,3 +90,40 @@ const breakfastOptions = [
   // Run the getRandomMeal function when the page loads
   getRandomMeal();
   
+
+  // SQLite
+
+  const sqlite3 = require('sqlite3').verbose();
+
+// Create a new database connection or open an existing one
+const db = new sqlite3.Database('./feeling_lucky_food.db', sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE);
+
+// Perform database operations
+db.serialize(() => {
+  // Create tables (if not exist) and insert data (you can customize this based on your needs)
+  db.run(`
+    CREATE TABLE IF NOT EXISTS breakfast (
+      id INTEGER PRIMARY KEY,
+      name TEXT NOT NULL
+    )
+  `);
+
+  db.run(`INSERT INTO breakfast (name) VALUES ('Egg McMuffin')`);
+  db.run(`INSERT INTO breakfast (name) VALUES ('Hotcakes and Sausage')`);
+  // Insert other breakfast options...
+
+  // Add similar code for lunch and dinner options
+
+  // Retrieve data
+  db.all('SELECT name FROM breakfast', (err, breakfastOptions) => {
+    if (err) {
+      console.error(err);
+    } else {
+      // Here, breakfastOptions will contain an array of breakfast option names
+      console.log(breakfastOptions);
+    }
+  });
+});
+
+// Close the database connection when done
+db.close();
